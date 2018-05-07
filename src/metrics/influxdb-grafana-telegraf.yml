@@ -20,10 +20,6 @@ data:
     engine = "tsm1"
     wal-dir = "/var/lib/influxdb/wal"
 
-    [admin]
-    enabled = true
-    bind-address = ":8086"
-
 ---
 apiVersion: apps/v1beta2
 kind: Deployment 
@@ -76,6 +72,7 @@ spec:
   ports:
   - port: 8086
     protocol: TCP
+  type: NodePort
   selector:
     app: influxdb
 
@@ -122,7 +119,6 @@ spec:
     app: grafana
 
 ---
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -140,7 +136,7 @@ data:
       service_address = ":8125"
 
     [[outputs.influxdb]]
-      urls = ["http://influxdb.dev.svc.cluster.local:8086"]
+      urls = ["http://influxdb-service.dev.svc.cluster.local:8086"]
       database = "metrics"
 
 ---
@@ -184,3 +180,21 @@ spec:
           - key: telegraf.conf
             path: telegraf.conf
 
+# NOTE: hostPort is not opening a port on the telegraf container,
+# see: https://github.com/coreos/flannel/issues/931
+# So in the meantime, I'm creating a service.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegraf-service
+  namespace: dev
+  labels:
+    app: telegraf
+spec:
+  ports:
+  - port: 8125
+    protocol: UDP
+  type: NodePort
+  selector:
+    app: telegraf

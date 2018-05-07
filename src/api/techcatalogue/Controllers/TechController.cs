@@ -1,14 +1,20 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using StatsdClient;
 
+[Route("api/[controller]")]
 public class TechController : Controller 
 {
-    public IEnumerable<string> Catalogue()
+    [HttpGet]
+    public IEnumerable<string> Get()
     {
-        return new List<string>() 
+        using (DogStatsd.StartTimer("Catalogue"))
         {
-            "Puppet"
-        };
+            return new List<string>() 
+            {
+                "Puppet"
+            };
+        }
     }
 }

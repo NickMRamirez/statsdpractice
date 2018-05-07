@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StatsdClient;
 
 namespace techcatalogue
 {
@@ -35,6 +36,14 @@ namespace techcatalogue
             }
 
             app.UseMvc();
+
+            var dogstatsdConfig = new StatsdConfig
+            {
+                StatsdServerName = "192.168.2.3",
+                StatsdPort = 30337
+            };
+
+            StatsdClient.DogStatsd.Configure(dogstatsdConfig);
         }
     }
 }
