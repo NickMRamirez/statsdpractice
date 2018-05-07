@@ -1,0 +1,186 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influxdb-configmap
+  namespace: dev
+data:
+  influxdb.conf: |-
+    [meta]
+    dir = "/var/lib/influxdb/meta"
+
+    [data]
+    dir = "/var/lib/influxdb/data"
+    engine = "tsm1"
+    wal-dir = "/var/lib/influxdb/wal"
+
+    [admin]
+    enabled = true
+    bind-address = ":8086"
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment 
+metadata:
+  name: influxdb 
+  namespace: dev
+  labels:
+    app: influxdb 
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: influxdb
+  template: 
+    metadata:
+      labels:
+        app: influxdb
+      namespace: dev
+    spec:
+      containers:
+      - name: influxdb 
+        image: influxdb
+        ports:
+        - name: http-service
+          containerPort: 8086
+        volumeMounts:
+        - mountPath: /var/lib/influxdb
+          name: influxdb-data-vol
+        - mountPath: /etc/influxdb
+          name: influxdb-config-vol
+      volumes:
+      - name: influxdb-data-vol
+        emptyDir: {}
+      - name: influxdb-config-vol
+        configMap:
+          name: influxdb-configmap
+          items:
+          - key: influxdb.conf
+            path: influxdb.conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb-service
+  namespace: dev
+  labels:
+    app: influxdb
+spec:
+  ports:
+  - port: 8086
+    protocol: TCP
+  selector:
+    app: influxdb
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment 
+metadata:
+  name: grafana 
+  namespace: dev
+  labels:
+    app: grafana 
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: grafana
+  template: 
+    metadata:
+      labels:
+        app: grafana
+      namespace: dev
+    spec:
+      containers:
+      - name: grafana 
+        image: grafana/grafana:latest
+        ports:
+        - name: http-service
+          containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: dev
+  labels:
+    app: grafana
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: grafana
+
+---
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-configmap
+  namespace: dev
+data:
+  telegraf.conf: |-
+    [[inputs.http_listener]]
+      service_address = ":8186"
+      read_timeout = "10s"
+      write_timeout = "10s"
+
+    [[inputs.statsd]]
+      protocol = "udp"
+      service_address = ":8125"
+
+    [[outputs.influxdb]]
+      urls = ["http://influxdb.dev.svc.cluster.local:8086"]
+      database = "metrics"
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: telegraf
+  namespace: dev
+  labels:
+    app: telegraf
+spec:
+  selector:
+    matchLabels:
+      name: telegraf
+  template:
+    metadata:
+      labels:
+        name: telegraf
+    spec:
+      containers:
+      - name: telegraf
+        image: telegraf:latest
+        ports:
+        - containerPort: 8125
+          hostPort: 8125
+          protocol: UDP
+        #resources:
+        #  limits:
+        #    memory: 200Mi
+        #  requests:
+        #    cpu: 100m
+        #    memory: 200Mi
+        volumeMounts:
+        - mountPath: /etc/telegraf
+          name: telegraf-config-vol
+      volumes:
+      - name: telegraf-config-vol
+        configMap:
+          name: telegraf-configmap
+          items:
+          - key: telegraf.conf
+            path: telegraf.conf
+
