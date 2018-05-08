@@ -71,6 +71,7 @@ metadata:
 spec:
   ports:
   - port: 8086
+    nodePort: 30002
     protocol: TCP
   type: NodePort
   selector:
@@ -113,6 +114,7 @@ metadata:
 spec:
   ports:
   - port: 3000
+    nodePort: 30000
     protocol: TCP
   type: NodePort
   selector:
@@ -161,7 +163,6 @@ spec:
         image: telegraf:latest
         ports:
         - containerPort: 8125
-          hostPort: 8125
           protocol: UDP
         #resources:
         #  limits:
@@ -194,6 +195,7 @@ metadata:
 spec:
   ports:
   - port: 8125
+    nodePort: 30001
     protocol: UDP
   type: NodePort
   selector:
