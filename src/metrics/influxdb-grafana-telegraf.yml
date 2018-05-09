@@ -155,11 +155,11 @@ metadata:
 spec:
   selector:
     matchLabels:
-      name: telegraf
+      app: telegraf
   template:
     metadata:
       labels:
-        name: telegraf
+        app: telegraf
     spec:
       containers:
       - name: telegraf
