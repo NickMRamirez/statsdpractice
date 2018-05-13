@@ -1,5 +1,7 @@
 
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using JustEat.StatsD;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,25 +24,40 @@ public class TechController : ControllerBase
     }
     
     [HttpGet]
-    public IEnumerable<string> Get()
+    public IEnumerable<string> GetAll()
     {
-        this.statsPublisher.Increment("techcatalogue.tech.get");
+        this.statsPublisher.Increment("techcatalogue.tech.getall.rate");
 
-        return this.technologies;
+        using (this.statsPublisher.StartTimer("techcatalogue.tech.getall.time"))
+        {
+            SyntheticWait();
+            return this.technologies;
+        }
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(200, Type = typeof(string))]
     [ProducesResponseType(404)]
-    public IActionResult Get(int id)
+    public IActionResult GetSingle(int id)
     {
-        this.statsPublisher.Increment("techcatalogue.tech.get.id");
+        this.statsPublisher.Increment("techcatalogue.tech.getsingle.rate");
 
-        if (id < this.technologies.Count) 
+        using (this.statsPublisher.StartTimer("techcatalogue.tech.getsingle.time"))
         {
-            return Ok(this.technologies[id]);
-        }
+            SyntheticWait();
+            if (id < this.technologies.Count) 
+            {
+                return Ok(this.technologies[id]);
+            }
 
-        return NotFound();
+            return NotFound();
+        }
+    }
+
+    private void SyntheticWait()
+    {
+        var rnd = new Random();
+        int durationMs = rnd.Next(1, 5000);
+        Thread.Sleep(durationMs);
     }
 }

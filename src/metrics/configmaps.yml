@@ -31,6 +31,12 @@ data:
     [[inputs.statsd]]
       protocol = "udp"
       service_address = ":8125"
+      delete_gauges = true
+      delete_counters = true
+      delete_sets = true
+      delete_timings = true
+      percentiles = [90, 95, 99]
+      percentile_limit = 1000
 
     [[outputs.file]]
       files = ["stdout", "/tmp/metrics.out"]
