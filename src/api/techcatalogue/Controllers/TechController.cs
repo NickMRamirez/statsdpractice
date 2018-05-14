@@ -26,9 +26,9 @@ public class TechController : ControllerBase
     [HttpGet]
     public IEnumerable<string> GetAll()
     {
-        this.statsPublisher.Increment("techcatalogue.techcontroller.getall.rate");
+        this.statsPublisher.Increment("techcatalogue.count.techcontroller.getall");
 
-        using (this.statsPublisher.StartTimer("techcatalogue.techcontroller.getall.time"))
+        using (this.statsPublisher.StartTimer("techcatalogue.timer.techcontroller.getall"))
         {
             SyntheticWait();
             return this.technologies;
@@ -40,16 +40,18 @@ public class TechController : ControllerBase
     [ProducesResponseType(404)]
     public IActionResult GetSingle(int id)
     {
-        this.statsPublisher.Increment("techcatalogue.techcontroller.getsingle.rate");
+        this.statsPublisher.Increment("techcatalogue.count.techcontroller.getsingle");
 
-        using (this.statsPublisher.StartTimer("techcatalogue.techcontroller.getsingle.time"))
+        using (this.statsPublisher.StartTimer("techcatalogue.timer.techcontroller.getsingle"))
         {
             SyntheticWait();
             if (id < this.technologies.Count) 
             {
+                this.statsPublisher.Increment("techcatalogue.count.techcontroller.getsingle.Ok");
                 return Ok(this.technologies[id]);
             }
 
+            this.statsPublisher.Increment("techcatalogue.count.techcontroller.getsingle.NotFound");
             return NotFound();
         }
     }
@@ -57,7 +59,7 @@ public class TechController : ControllerBase
     private void SyntheticWait()
     {
         var rnd = new Random();
-        int durationMs = rnd.Next(1, 5000);
+        int durationMs = rnd.Next(1, 3000);
         Thread.Sleep(durationMs);
     }
 }
