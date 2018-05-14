@@ -46,6 +46,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
+  "iteration": 1526265401145,
   "links": [],
   "panels": [
     {
@@ -60,6 +61,119 @@
         "w": 12,
         "x": 0,
         "y": 0
+      },
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "groupBy": [
+            {
+              "params": [
+                "10s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "0"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "/^$rateFunction$/",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Operations/sec",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ops",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_INFLUXDB}",
+      "fill": 1,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
       },
       "hideTimeOverride": true,
       "id": 2,
@@ -88,7 +202,7 @@
         {
           "alias": "90th Percentile",
           "groupBy": [],
-          "measurement": "techcatalogue_tech_getall_time",
+          "measurement": "/^$timeFunction$/",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "C",
@@ -109,7 +223,7 @@
           "alias": "95th Percentile",
           "groupBy": [],
           "hide": false,
-          "measurement": "techcatalogue_tech_getall_time",
+          "measurement": "/^$timeFunction$/",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -129,7 +243,7 @@
         {
           "alias": "99th Percentile",
           "groupBy": [],
-          "measurement": "techcatalogue_tech_getall_time",
+          "measurement": "/^$timeFunction$/",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",
@@ -188,11 +302,53 @@
       }
     }
   ],
+  "refresh": "1m",
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Time Function",
+        "multi": true,
+        "name": "timeFunction",
+        "options": [],
+        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /time$/",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "${DS_INFLUXDB}",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Rate Function",
+        "multi": true,
+        "name": "rateFunction",
+        "options": [],
+        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /rate$/",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-5m",
@@ -226,5 +382,5 @@
   "timezone": "",
   "title": "tech measurements",
   "uid": "m7aewonik",
-  "version": 2
+  "version": 12
 }

@@ -26,9 +26,9 @@ public class TechController : ControllerBase
     [HttpGet]
     public IEnumerable<string> GetAll()
     {
-        this.statsPublisher.Increment("techcatalogue.tech.getall.rate");
+        this.statsPublisher.Increment("techcatalogue.techcontroller.getall.rate");
 
-        using (this.statsPublisher.StartTimer("techcatalogue.tech.getall.time"))
+        using (this.statsPublisher.StartTimer("techcatalogue.techcontroller.getall.time"))
         {
             SyntheticWait();
             return this.technologies;
@@ -40,9 +40,9 @@ public class TechController : ControllerBase
     [ProducesResponseType(404)]
     public IActionResult GetSingle(int id)
     {
-        this.statsPublisher.Increment("techcatalogue.tech.getsingle.rate");
+        this.statsPublisher.Increment("techcatalogue.techcontroller.getsingle.rate");
 
-        using (this.statsPublisher.StartTimer("techcatalogue.tech.getsingle.time"))
+        using (this.statsPublisher.StartTimer("techcatalogue.techcontroller.getsingle.time"))
         {
             SyntheticWait();
             if (id < this.technologies.Count) 
