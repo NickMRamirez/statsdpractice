@@ -44,8 +44,10 @@ data:
       percentiles = [90, 95, 99]
       percentile_limit = 1000
 
-    [[outputs.file]]
-      files = ["stdout", "/tmp/metrics.out"]
+    # [[inputs.socket_listener]]
+    #   service_address: "udp://*:25826"
+    #   name_prefix = "collectd_"
+    #   data_format = "collectd"
 
     [[outputs.influxdb]]
       urls = ["http://influxdb-service.dev.svc.cluster.local:8086"]
@@ -61,13 +63,20 @@ data:
   datasource.yml: |-
     apiVersion: 1
     datasources:
-    - name: Influxdb
+    - name: telegraf
       type: influxdb
       access: proxy
       orgId: 1
       url: http://influxdb-service.dev.svc.cluster.local:8086
       database: metrics
       isDefault: true
+    - name: k8s
+      type: influxdb
+      access: proxy
+      orgId: 2
+      url: http://influxdb-service.dev.svc.cluster.local:8086
+      database: k8s
+      isDefault: false
 
 ---
 apiVersion: apps/v1beta2

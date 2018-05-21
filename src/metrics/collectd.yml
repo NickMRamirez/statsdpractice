@@ -1,0 +1,29 @@
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: collectd 
+  namespace: dev
+  labels:
+    app: collectd 
+spec: 
+  selector: 
+    matchLabels:
+      app: collectd
+  template: 
+    metadata:
+      labels:
+        app: collectd
+      namespace: dev
+    spec:
+      containers:
+      - name: collectd 
+        image: bobrik/collectd-docker
+        env:
+        - name: METRICS_HOST
+          value: "telegraf-service.dev.svc.cluster.local"
+        - name: METRICS_PORT
+          value: "25826"
+        securityContext:
+          privileged: true

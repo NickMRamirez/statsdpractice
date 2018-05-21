@@ -14,7 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.1.2"
+      "version": "5.1.3"
     },
     {
       "type": "panel",
@@ -46,7 +46,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1526332794577,
+  "iteration": 1526795228493,
   "links": [],
   "panels": [
     {
@@ -467,7 +467,7 @@
         "multi": true,
         "name": "timeFunction",
         "options": [],
-        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /^techcatalogue.timer/",
+        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /^techcatalogue_timer/",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -487,7 +487,7 @@
         "multi": true,
         "name": "rateFunction",
         "options": [],
-        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /^techcatalogue.count/",
+        "query": "SHOW MEASUREMENTS WITH MEASUREMENT =~ /^techcatalogue_count/",
         "refresh": 1,
         "regex": "",
         "sort": 0,
@@ -531,5 +531,5 @@
   "timezone": "",
   "title": "tech measurements",
   "uid": "m7aewonik",
-  "version": 7
+  "version": 2
 }
