@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace web.Controllers
 {
     public class HomeController : Controller
     {
-        private static Queue<string> registrationQueue = new Queue<string>(100);
+        private static ConcurrentQueue<string> registrationQueue = new ConcurrentQueue<string>();
         
         private IStatsDPublisher statsd;
 
@@ -30,9 +31,10 @@ namespace web.Controllers
         public IActionResult Register(string level) 
         {
             registrationQueue.Enqueue(level);
+            this.statsd.Gauge(registrationQueue.Count, "gauge.homecontroller.registrationqueue");
             
             this.statsd.Increment($"count.homecontroller.register.level.{level}");
-            this.statsd.Gauge(registrationQueue.Count, "gauge.homecontroller.registrationqueue");
+            
             
             using (this.statsd.StartTimer("timer.homecontroller.register"))
             {
@@ -41,7 +43,9 @@ namespace web.Controllers
 
                 if (registrationQueue.Any())
                 {
-                    registrationQueue.Dequeue();
+                    string result;
+                    registrationQueue.TryDequeue(out result);
+                    this.statsd.Gauge(registrationQueue.Count, "gauge.homecontroller.registrationqueue");
                 }
 
                 return View("~/Views/Home/register.cshtml");
@@ -55,7 +59,7 @@ namespace web.Controllers
 
         private void GetPrices()
         {
-            SyntheticWait(3000);
+            SyntheticWait(2000);
         }
 
         private void SyntheticWait(int durationMs)

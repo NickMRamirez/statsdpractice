@@ -52,7 +52,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1526957518993,
+  "iteration": 1527013276033,
   "links": [],
   "panels": [
     {
@@ -93,7 +93,7 @@
       "targets": [
         {
           "groupBy": [],
-          "measurement": "web_timer_homecontroller_getprices",
+          "measurement": "/^$timer$/",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -366,7 +366,7 @@
       "valueName": "current"
     }
   ],
-  "refresh": "10s",
+  "refresh": "5s",
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
@@ -446,5 +446,5 @@
   "timezone": "",
   "title": "Web Dashboard",
   "uid": "xgLtBnViz",
-  "version": 8
+  "version": 2
 }
