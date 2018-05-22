@@ -4,14 +4,15 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/api/techcatalogue/bin/Debug/netcoreapp2.0/techcatalogue.dll",
+            "program": "${workspaceFolder}/src/web/bin/Debug/netcoreapp2.0/web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/api/techcatalogue",
+            "cwd": "${workspaceFolder}/src/web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
